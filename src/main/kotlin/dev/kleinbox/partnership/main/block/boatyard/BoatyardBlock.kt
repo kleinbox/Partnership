@@ -42,7 +42,6 @@ class BoatyardBlock(properties: Properties) : HorizontalDirectionalBlock(propert
         if (level.isClientSide) return InteractionResult.SUCCESS
 
         val menuProvider = blockState.getMenuProvider(level, blockPos)
-
         menuProvider?.let { player.openMenu(it) }
 
         return InteractionResult.SUCCESS
