@@ -1,6 +1,6 @@
 {
   "required": false,
-  "package": "cc.tweaked_programs.mixin",
+  "package": "dev.kleinbox.partnership.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
     "BoatDespawnMixin",
