@@ -7,6 +7,7 @@ import dev.kleinbox.partnership.client.renderer.armor.HatRenderer
 import dev.kleinbox.partnership.client.renderer.blockentity.MarineCannonBlockEntityRenderer
 import dev.kleinbox.partnership.client.renderer.entity.KayakRenderer
 import dev.kleinbox.partnership.client.renderer.entity.LifebuoyRenderer
+import dev.kleinbox.partnership.main.Partnership
 import dev.kleinbox.partnership.main.registries.BlockEntityRegistries
 import dev.kleinbox.partnership.main.registries.BlockRegistries
 import dev.kleinbox.partnership.main.registries.EntityRegistries.CANNONBALL
@@ -28,6 +29,8 @@ object PartnershipClient : ClientModInitializer {
 	override fun onInitializeClient() {
 		// WAKE UP
 		ScreenRegistries
+
+		Partnership.proxy = ProxyClient()
 
 		// Client
 		blockRendering()

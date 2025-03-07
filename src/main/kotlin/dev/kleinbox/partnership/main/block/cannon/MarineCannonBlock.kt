@@ -1,6 +1,7 @@
 package dev.kleinbox.partnership.main.block.cannon
 
 import com.mojang.serialization.MapCodec
+import dev.kleinbox.partnership.main.Partnership
 import dev.kleinbox.partnership.main.registries.ItemRegistries
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
@@ -11,7 +12,6 @@ import net.minecraft.util.RandomSource
 import net.minecraft.world.InteractionHand
 import net.minecraft.world.InteractionResult
 import net.minecraft.world.ItemInteractionResult
-import net.minecraft.world.MenuProvider
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.context.BlockPlaceContext
@@ -51,12 +51,9 @@ class MarineCannonBlock(properties: Properties) : BaseEntityBlock(properties), E
         player: Player,
         hitResult: BlockHitResult
     ): InteractionResult {
-        if (level.isClientSide) return InteractionResult.CONSUME
-
-        val menuProvider = state.getMenuProvider(level, pos)
-        menuProvider?.let { player.openMenu(it) }
-
-        return InteractionResult.CONSUME
+        if (level.isClientSide())
+            Partnership.proxy.openMarineScreen(pos)
+        return InteractionResult.SUCCESS
     }
 
     override fun useItemOn(
@@ -68,8 +65,6 @@ class MarineCannonBlock(properties: Properties) : BaseEntityBlock(properties), E
         hand: InteractionHand,
         hitResult: BlockHitResult
     ): ItemInteractionResult {
-        if (level.isClientSide) return ItemInteractionResult.CONSUME
-
         val blockEntity = level.getBlockEntity(pos)
         if (blockEntity !is MarineCannonBlockEntity)
             return ItemInteractionResult.FAIL
@@ -77,12 +72,15 @@ class MarineCannonBlock(properties: Properties) : BaseEntityBlock(properties), E
         if (player.mainHandItem.item != ItemRegistries.CANNONBALL)
             return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION
 
+        if (level.isClientSide) return ItemInteractionResult.FAIL
+
         if (blockEntity.balls >= MarineCannonBlockEntity.MAX_LOAD)
             return ItemInteractionResult.SUCCESS
 
         if (!player.isCreative)
             player.mainHandItem.count--
         blockEntity.balls++
+        blockEntity.setChanged()
 
         level.playSound(null, pos, SoundEvents.DECORATED_POT_PLACE, SoundSource.BLOCKS, 1f, 0.3F)
 
@@ -105,15 +103,11 @@ class MarineCannonBlock(properties: Properties) : BaseEntityBlock(properties), E
             blockEntity.shoot()
             level.playSound(null, pos, SoundEvents.GENERIC_EXPLODE.value(), SoundSource.BLOCKS, 1f, 1.6F)
             blockEntity.balls--
+            blockEntity.setChanged()
         }
     }
 
     override fun isSignalSource(state: BlockState): Boolean = true
-
-    override fun getMenuProvider(blockState: BlockState, level: Level, blockPos: BlockPos): MenuProvider? {
-        val blockEntity = level.getBlockEntity(blockPos)
-        return if (blockEntity is MarineCannonBlockEntity) blockEntity else null
-    }
 
     override fun createBlockStateDefinition(builder: StateDefinition.Builder<Block, BlockState>) { builder
         .add(BlockStateProperties.HORIZONTAL_FACING)

@@ -11,6 +11,7 @@ const val BRAND_COLOR: Int = 0xFF2D54
 object Partnership : ModInitializer {
 
 	val logger: Logger = LoggerFactory.getLogger(MOD_ID)
+	var proxy: Proxy = Proxy()
 
 	override fun onInitialize() {
 		BlockRegistries

@@ -1,18 +1,17 @@
 package dev.kleinbox.partnership.client.screen
 
-import dev.kleinbox.partnership.main.menu.MarineCannonMenu
+import dev.kleinbox.partnership.main.block.cannon.MarineCannonBlockEntity
 import dev.kleinbox.partnership.main.packet.MarineRotC2SPacket
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.screens.Screen
-import net.minecraft.client.gui.screens.inventory.MenuAccess
+import net.minecraft.core.BlockPos
 import net.minecraft.network.chat.Component
-import net.minecraft.world.entity.player.Inventory
 import kotlin.math.roundToInt
 
 
-class MarineCannonScreen(private val menu: MarineCannonMenu, inventory: Inventory, title: Component) : Screen(title), MenuAccess<MarineCannonMenu> {
+class MarineCannonScreen(val pos: BlockPos) : Screen(Component.literal("block.partnership.marine_cannon")) {
 
     private fun renderLabels(guiGraphics: GuiGraphics) {
         val message = Component.translatable("menu.partnership.marine_cannon.escape")
@@ -41,24 +40,22 @@ class MarineCannonScreen(private val menu: MarineCannonMenu, inventory: Inventor
 
         if (blockEntity != null) {
             ClientPlayNetworking.send(
-                MarineRotC2SPacket(menu.pos, blockEntity.xRot, blockEntity.yRot)
+                MarineRotC2SPacket(pos, blockEntity.xRot, blockEntity.yRot)
             )
         }
 
         return super.mouseReleased(d, e, i)
     }
 
-    private fun getBlockEntity(): dev.kleinbox.partnership.main.block.cannon.MarineCannonBlockEntity? {
+    private fun getBlockEntity(): MarineCannonBlockEntity? {
         val player = Minecraft.getInstance().player
         if (player?.level() == null)
             return null
 
-        val blockEntity = player.level().getBlockEntity(menu.pos)
-        if (blockEntity is dev.kleinbox.partnership.main.block.cannon.MarineCannonBlockEntity)
+        val blockEntity = player.level().getBlockEntity(pos)
+        if (blockEntity is MarineCannonBlockEntity)
             return blockEntity
 
         return null
     }
-
-    override fun getMenu(): MarineCannonMenu = menu
 }

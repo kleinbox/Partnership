@@ -1,7 +1,6 @@
 package dev.kleinbox.partnership.main.block.cannon
 
 import dev.kleinbox.partnership.main.entity.CannonballEntity
-import dev.kleinbox.partnership.main.menu.MarineCannonMenu
 import dev.kleinbox.partnership.main.registries.BlockEntityRegistries
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
@@ -10,16 +9,11 @@ import net.minecraft.core.Direction
 import net.minecraft.core.HolderLookup
 import net.minecraft.core.particles.ParticleTypes
 import net.minecraft.nbt.CompoundTag
-import net.minecraft.network.chat.Component
 import net.minecraft.network.protocol.Packet
 import net.minecraft.network.protocol.game.ClientGamePacketListener
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket
 import net.minecraft.util.Mth
 import net.minecraft.util.Mth.clamp
-import net.minecraft.world.MenuProvider
-import net.minecraft.world.entity.player.Inventory
-import net.minecraft.world.entity.player.Player
-import net.minecraft.world.inventory.AbstractContainerMenu
 import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.entity.BlockEntity
 import net.minecraft.world.level.block.state.BlockState
@@ -27,8 +21,7 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties
 import net.minecraft.world.phys.Vec3
 import org.joml.Math.toRadians
 
-class MarineCannonBlockEntity(pos: BlockPos, val state: BlockState) : BlockEntity(BlockEntityRegistries.MARINE_CANNON, pos, state),
-    MenuProvider {
+class MarineCannonBlockEntity(pos: BlockPos, val state: BlockState) : BlockEntity(BlockEntityRegistries.MARINE_CANNON, pos, state) {
 
     var xRot: Float = 0F
     var yRot: Float = 0F
@@ -73,12 +66,6 @@ class MarineCannonBlockEntity(pos: BlockPos, val state: BlockState) : BlockEntit
             clamp(yRot, -45F, 45F)
         )
     }
-
-    override fun createMenu(syncId: Int, inventory: Inventory, player: Player): AbstractContainerMenu
-            = MarineCannonMenu(syncId, inventory, blockPos)
-
-    // Not really used but whatever
-    override fun getDisplayName(): Component = Component.literal("block.partnership.marine_cannon")
 
     override fun getUpdatePacket(): Packet<ClientGamePacketListener>? {
         return ClientboundBlockEntityDataPacket.create(this)
