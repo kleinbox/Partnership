@@ -22,14 +22,18 @@ class LifebuoyModel(model: ModelPart) : EntityModel<Lifebuoy>() {
 
     }
 
-    override fun renderToBuffer(poseStack: PoseStack, vertexConsumer: VertexConsumer, packedLight: Int,
-                                packedOverlay: Int, red: Float, green: Float, blue: Float, alpha: Float) {
-
-        body.render(poseStack, vertexConsumer, packedLight, packedOverlay, red, green, blue, alpha)
+    override fun renderToBuffer(
+        poseStack: PoseStack,
+        vertexConsumer: VertexConsumer,
+        packedLight: Int,
+        packedOverlay: Int,
+        color: Int
+    ) {
+        body.render(poseStack, vertexConsumer, packedLight, packedOverlay)
     }
 
     companion object {
-        val LAYER_LOCATION: ModelLayerLocation = ModelLayerLocation(ResourceLocation(MOD_ID, "lifebuoy"), "main")
+        val LAYER_LOCATION: ModelLayerLocation = ModelLayerLocation(ResourceLocation.fromNamespaceAndPath(MOD_ID, "lifebuoy"), "main")
 
         fun createBodyLayer(): LayerDefinition {
             val meshDefinition = MeshDefinition()

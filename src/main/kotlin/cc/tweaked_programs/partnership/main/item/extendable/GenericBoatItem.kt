@@ -25,7 +25,12 @@ class GenericBoatItem (
     val space: Int,
     private val boat: (Level, Double, Double, Double) -> GenericBoat) : BoatItem(false, Boat.Type.OAK, properties) {
 
-    override fun appendHoverText(itemStack: ItemStack, level: Level?, list: MutableList<Component>, tooltipFlag: TooltipFlag)
+    override fun appendHoverText(
+        itemStack: ItemStack,
+        context: TooltipContext,
+        list: MutableList<Component>,
+        tooltipFlag: TooltipFlag
+    )
         = AdvancedItemDescription.appendHoverText(descriptionId, true, list)
 
     override fun use(level: Level, user: Player, hand: InteractionHand): InteractionResultHolder<ItemStack> {

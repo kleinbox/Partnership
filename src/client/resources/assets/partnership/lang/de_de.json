@@ -31,9 +31,6 @@
   "item.partnership.sailboat": "Segelfloß",
   "tooltip.item.partnership.sailboat": "Schneller als übliche Boote aufgrund des Segels.",
 
-  "item.partnership.paddle": "Paddel",
-  "tooltip.item.partnership.paddle": "Hat +1 Rückstoß als Basis.",
-
   "item.partnership.canvas_roll": "Segeltuchrolle",
   "item.partnership.plank": "Planke",
 
@@ -47,7 +44,6 @@
 
   "entity.partnership.kayak": "Kajak",
   "entity.partnership.lifebuoy": "Rettungsring",
-  "entity.partnership.sailboat": "Segelfloß",
   "entity.partnership.cannonball": "Kanonenkugel",
 
   "emi.category.partnership.boatyard": "Werftindustrie",

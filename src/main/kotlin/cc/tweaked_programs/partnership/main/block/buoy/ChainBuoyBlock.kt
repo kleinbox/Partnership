@@ -9,7 +9,6 @@ import net.minecraft.world.phys.shapes.VoxelShape
 
 class ChainBuoyBlock(properties: Properties) : BuoyBlock(properties) {
 
-    @Suppress("OVERRIDE_DEPRECATION")
     override fun getShape(blockState: BlockState, blockGetter: BlockGetter, blockPos: BlockPos,
                           collisionContext: CollisionContext
     ): VoxelShape = shape

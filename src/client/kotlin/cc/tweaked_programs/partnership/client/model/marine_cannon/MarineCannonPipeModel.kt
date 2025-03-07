@@ -2,7 +2,6 @@ package cc.tweaked_programs.partnership.client.model.marine_cannon
 
 import cc.tweaked_programs.partnership.main.MOD_ID
 import cc.tweaked_programs.partnership.main.block.cannon.MarineCannonBlockEntity
-import cc.tweaked_programs.partnership.main.block.cannon.MarineCannonBlockEntity.Companion.COUNTDOWN
 import com.mojang.blaze3d.vertex.PoseStack
 import com.mojang.blaze3d.vertex.VertexConsumer
 import net.minecraft.client.model.Model
@@ -27,23 +26,26 @@ class MarineCannonPipeModel(root: ModelPart) :
     private val string: ModelPart = pipe.getChild("string")
 
     fun setupAnim(entity: MarineCannonBlockEntity, partialTicks: Float) {
-        val rotation = (entity.state.getValue(BlockStateProperties.HORIZONTAL_FACING).toYRot() + entity.getXRot()) * MAGIKK
-        pipe.setRotation(entity.getYRot() * MAGIKK, rotation, 0F)
-        string.visible = entity.isShooting()
-        string.z = -2.01F+((3F/COUNTDOWN*(entity.getTimeLeft().toFloat())).toInt())
+        val rotation = (entity.state.getValue(BlockStateProperties.HORIZONTAL_FACING).toYRot() + entity.xRot) * MAGIKK
+        pipe.setRotation(entity.yRot * MAGIKK, rotation, 0F)
+        string.z = -2.01F+((3F/MarineCannonBlockEntity.MAX_LOAD*(entity.balls.toFloat())).toInt())
     }
 
-    override fun renderToBuffer(poseStack: PoseStack, vertexConsumer: VertexConsumer, packedLight: Int,
-                                packedOverlay: Int, red: Float, green: Float, blue: Float, alpha: Float) {
-
-        pipe.render(poseStack, vertexConsumer, packedLight, packedOverlay, red, green, blue, alpha)
+    override fun renderToBuffer(
+        poseStack: PoseStack,
+        vertexConsumer: VertexConsumer,
+        packedLight: Int,
+        packedOverlay: Int,
+        color: Int
+    ) {
+        pipe.render(poseStack, vertexConsumer, packedLight, packedOverlay)
     }
 
     companion object {
 
-        val LAYER_LOCATION: ModelLayerLocation = ModelLayerLocation(ResourceLocation(MOD_ID, "marine_cannon"), "main")
+        val LAYER_LOCATION: ModelLayerLocation = ModelLayerLocation(ResourceLocation.fromNamespaceAndPath(MOD_ID, "marine_cannon"), "main")
 
-        val TEXTURE = ResourceLocation(MOD_ID, "textures/entity/marine_cannon/pipe.png")
+        val TEXTURE = ResourceLocation.fromNamespaceAndPath(MOD_ID, "textures/entity/marine_cannon/pipe.png")
 
         private const val MAGIKK: Float = (PI.toFloat() / 180f)
 

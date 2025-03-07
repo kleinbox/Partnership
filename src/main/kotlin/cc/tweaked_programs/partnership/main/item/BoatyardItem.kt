@@ -9,15 +9,18 @@ import net.minecraft.world.item.BlockItem
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.TooltipFlag
 import net.minecraft.world.item.context.BlockPlaceContext
-import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.state.properties.BlockStateProperties
 
 
 class BoatyardItem(block: Block, properties: Properties) : BlockItem(block, properties) {
 
-    override fun appendHoverText(itemStack: ItemStack, level: Level?, list: MutableList<Component>, tooltipFlag: TooltipFlag)
-        = AdvancedItemDescription.appendHoverText(descriptionId, true, list)
+    override fun appendHoverText(
+        stack: ItemStack,
+        context: TooltipContext,
+        list: MutableList<Component>,
+        tooltipFlag: TooltipFlag
+    ) = AdvancedItemDescription.appendHoverText(descriptionId, true, list)
 
     override fun place(blockPlaceContext: BlockPlaceContext): InteractionResult {
         val otherSide = BoatyardBlock.getOtherSide(blockPlaceContext.clickedPos,

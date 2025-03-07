@@ -22,7 +22,7 @@ object BlockEntityRegistries {
 
         return Registry.register(
             BuiltInRegistries.BLOCK_ENTITY_TYPE,
-            ResourceLocation(MOD_ID, name),
+            ResourceLocation.fromNamespaceAndPath(MOD_ID, name),
             FabricBlockEntityTypeBuilder.create(blockEntitySupplier, block).build()
         )
     }

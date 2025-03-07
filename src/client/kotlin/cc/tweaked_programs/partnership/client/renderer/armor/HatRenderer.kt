@@ -21,11 +21,11 @@ class HatRenderer : ArmorRenderer {
         when (itemStack.item) {
             ItemRegistries.CAPTAINS_HAT -> {
                 CAPTAINS_HAT.setupAnim(contextModel)
-                CAPTAINS_HAT.renderToBuffer(posestack, multiBufferSource.getBuffer(CAPTAINS_HAT.renderType(CaptainsHatModel.TEXTURE)), light, OverlayTexture.NO_OVERLAY, 1F, 1F, 1F, 1F)
+                CAPTAINS_HAT.renderToBuffer(posestack, multiBufferSource.getBuffer(CAPTAINS_HAT.renderType(CaptainsHatModel.TEXTURE)), light, OverlayTexture.NO_OVERLAY)
             }
             ItemRegistries.SAILORS_HAT -> {
                 SAILORS_HAT.setupAnim(contextModel)
-                SAILORS_HAT.renderToBuffer(posestack, multiBufferSource.getBuffer(SAILORS_HAT.renderType(SailorsHatModel.TEXTURE)), light, OverlayTexture.NO_OVERLAY, 1F, 1F, 1F, 1F)
+                SAILORS_HAT.renderToBuffer(posestack, multiBufferSource.getBuffer(SAILORS_HAT.renderType(SailorsHatModel.TEXTURE)), light, OverlayTexture.NO_OVERLAY)
             }
         }
     }

@@ -7,6 +7,7 @@ import cc.tweaked_programs.partnership.main.recipe.BoatyardRecipe
 import cc.tweaked_programs.partnership.main.registries.BlockEntityRegistries.BOATYARD
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
+import net.minecraft.core.HolderLookup
 import net.minecraft.core.NonNullList
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.network.chat.Component
@@ -19,6 +20,7 @@ import net.minecraft.world.entity.player.StackedContents
 import net.minecraft.world.inventory.AbstractContainerMenu
 import net.minecraft.world.inventory.CraftingContainer
 import net.minecraft.world.item.ItemStack
+import net.minecraft.world.item.crafting.RecipeInput
 import net.minecraft.world.level.block.entity.BlockEntity
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.block.state.properties.BlockStateProperties
@@ -29,23 +31,23 @@ class BoatyardBlockEntity(val pos: BlockPos, val state: BlockState) : BlockEntit
     val isDummy: Boolean = state.getValue(BlockStateProperties.EXTENDED)
     override val inventory: NonNullList<ItemStack> = NonNullList.withSize(INV_SIZE, ItemStack.EMPTY)
 
-    override fun saveAdditional(compoundTag: CompoundTag) {
+    override fun saveAdditional(compoundTag: CompoundTag, registries: HolderLookup.Provider) {
         if (isDummy) return
 
-        ContainerHelper.saveAllItems(compoundTag, inventory)
-        super.saveAdditional(compoundTag)
+        ContainerHelper.saveAllItems(compoundTag, inventory, registries)
+        super.saveAdditional(compoundTag, registries)
     }
 
-    override fun load(compoundTag: CompoundTag) {
+    override fun loadAdditional(compoundTag: CompoundTag, registries: HolderLookup.Provider) {
         if (isDummy) return
 
-        super.load(compoundTag)
-        ContainerHelper.loadAllItems(compoundTag, inventory)
+        super.loadAdditional(compoundTag, registries)
+        ContainerHelper.loadAllItems(compoundTag, inventory, registries)
     }
 
     override fun removeItem(slot: Int, count: Int): ItemStack {
         if (slot == INV_SIZE-1 && hasLevel()) {
-            val optional = level!!.recipeManager.getRecipeFor(BoatyardRecipe.Companion.Type.TYPE, this, level!!)
+            val optional = level!!.recipeManager.getRecipeFor(BoatyardRecipe.Companion.Type.TYPE, inventory as RecipeInput, level!!)
 
             if (optional.isPresent) {
                 val recipe = optional.get().value
@@ -71,12 +73,12 @@ class BoatyardBlockEntity(val pos: BlockPos, val state: BlockState) : BlockEntit
         if (!hasLevel() || level!!.isClientSide)
             return
 
-        val optional = level!!.recipeManager.getRecipeFor(BoatyardRecipe.Companion.Type.TYPE, this, level!!)
+        val optional = level!!.recipeManager.getRecipeFor(BoatyardRecipe.Companion.Type.TYPE, inventory as RecipeInput, level!!)
 
         if (optional.isPresent) {
             val recipe = optional.get().value
-            if (recipe.matches(this, level!!)) {
-                val output = recipe.assemble(this, level!!.registryAccess())
+            if (recipe.matches(inventory, level!!)) {
+                val output = recipe.assemble(inventory, level!!.registryAccess())
                 setItem(INV_SIZE-1, output)
                 return
             }

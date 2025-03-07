@@ -2,6 +2,7 @@ package cc.tweaked_programs.partnership.client.screen
 
 import cc.tweaked_programs.partnership.main.block.cannon.MarineCannonBlockEntity
 import cc.tweaked_programs.partnership.main.menu.MarineCannonMenu
+import cc.tweaked_programs.partnership.main.packet.MarineRotC2SPacket
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs
 import net.minecraft.client.Minecraft
@@ -44,8 +45,7 @@ class MarineCannonScreen(private val menu: MarineCannonMenu, inventory: Inventor
 
         if (blockEntity != null) {
             ClientPlayNetworking.send(
-                MarineCannonBlockEntity.SYNC_ROT_NETWORK_ID,
-                packet(menu.pos, blockEntity.getXRot(), blockEntity.getYRot())
+                MarineRotC2SPacket( menu.pos, blockEntity.xRot, blockEntity.yRot)
             )
         }
 

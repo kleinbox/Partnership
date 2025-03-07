@@ -37,7 +37,6 @@ class AnchorBlock(properties: Properties) : Block(properties), SimpleWaterlogged
         .setValue(BlockStateProperties.WATERLOGGED, ctx.level
             .getFluidState(ctx.clickedPos).type === Fluids.WATER)
 
-    @Suppress("OVERRIDE_DEPRECATION", "DEPRECATION")
     override fun updateShape(blockState: BlockState, direction: Direction, targetBlockState: BlockState,
                              levelAccessor: LevelAccessor, blockPos: BlockPos, targetBlockPos: BlockPos): BlockState? {
 
@@ -47,7 +46,6 @@ class AnchorBlock(properties: Properties) : Block(properties), SimpleWaterlogged
         return super.updateShape(blockState, direction, targetBlockState, levelAccessor, blockPos, targetBlockPos)
     }
 
-    @Suppress("OVERRIDE_DEPRECATION", "DEPRECATION")
     override fun getFluidState(blockState: BlockState): FluidState {
         if (blockState.getValue(ChainBlock.WATERLOGGED))
             return Fluids.WATER.getSource(false)
@@ -55,19 +53,16 @@ class AnchorBlock(properties: Properties) : Block(properties), SimpleWaterlogged
         return super.getFluidState(blockState)
     }
 
-    @Suppress("OVERRIDE_DEPRECATION")
     override fun rotate(blockState: BlockState, rotation: Rotation): BlockState {
         return blockState.setValue(
             HorizontalDirectionalBlock.FACING, rotation.rotate(blockState.getValue(
                 HorizontalDirectionalBlock.FACING) as Direction)) as BlockState
     }
 
-    @Suppress("OVERRIDE_DEPRECATION")
     override fun mirror(blockState: BlockState, mirror: Mirror): BlockState {
         return blockState.rotate(mirror.getRotation(blockState.getValue(HorizontalDirectionalBlock.FACING) as Direction))
     }
 
-    @Suppress("OVERRIDE_DEPRECATION")
     override fun getShape(blockState: BlockState, blockGetter: BlockGetter, blockPos: BlockPos,
                           collisionContext: CollisionContext
     ): VoxelShape = when(blockState.getValue(HorizontalDirectionalBlock.FACING)) {
@@ -78,7 +73,6 @@ class AnchorBlock(properties: Properties) : Block(properties), SimpleWaterlogged
         else -> Shapes.block()
     }
 
-    @Suppress("OVERRIDE_DEPRECATION", "DEPRECATION")
     override fun onPlace(blockState: BlockState, level: Level, blockPos: BlockPos, blockState2: BlockState, bl: Boolean) {
         super.onPlace(blockState, level, blockPos, blockState2, bl)
         if (!level.isClientSide && level is ServerLevel) {
@@ -89,7 +83,6 @@ class AnchorBlock(properties: Properties) : Block(properties), SimpleWaterlogged
         }
     }
 
-    @Suppress("OVERRIDE_DEPRECATION", "DEPRECATION")
     override fun onRemove(blockState: BlockState, level: Level, blockPos: BlockPos, blockState2: BlockState, bl: Boolean) {
         super.onRemove(blockState, level, blockPos, blockState2, bl)
         if (!level.isClientSide && level is ServerLevel) {

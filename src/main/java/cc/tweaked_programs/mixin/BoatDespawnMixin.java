@@ -1,6 +1,5 @@
 package cc.tweaked_programs.mixin;
 
-import cc.tweaked_programs.partnership.main.compat.Compat;
 import cc.tweaked_programs.partnership.main.level.command.MarkChunkAsSeaport;
 import cc.tweaked_programs.partnership.main.registries.GameRuleRegistries;
 import net.minecraft.nbt.CompoundTag;
@@ -51,15 +50,9 @@ abstract public class BoatDespawnMixin extends VehicleEntity implements VariantH
 
             if (anchors <= 0) {
                 List<Entity> passengers = this.getPassengers();
-                boolean hasMotor = false;
-                for (Entity entity : passengers)
-                    if (Compat.INSTANCE.getBoatism().isEngine(entity)) {
-                        hasMotor = true;
-                        break;
-                    }
 
                 // Boats should despawn
-                if (passengers.isEmpty() || (passengers.size() == 1 && hasMotor)) {
+                if (passengers.isEmpty()) {
                     // Countdown starts as boat is not being used anymore
                     if (despawnTimer > 0) {
                         despawnTimer--;
@@ -83,8 +76,8 @@ abstract public class BoatDespawnMixin extends VehicleEntity implements VariantH
     }
 
     @Inject(at = @At("TAIL"), method = "defineSynchedData")
-    protected void partnership$defineDespawnDataId(CallbackInfo ci) {
-        this.entityData.define(DATA_ID_DESPAWN, -1);
+    protected void partnership$defineDespawnDataId(SynchedEntityData.Builder builder, CallbackInfo ci) {
+        builder.define(DATA_ID_DESPAWN, -1);
     }
 
     @Inject(at = @At("TAIL"), method = "addAdditionalSaveData")

@@ -1,9 +1,9 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-	id 'fabric-loom' version '1.5-SNAPSHOT'
+	id 'fabric-loom' version '1.10-SNAPSHOT'
 	id 'maven-publish'
-  id "org.jetbrains.kotlin.jvm" version "1.9.22"
+	id "org.jetbrains.kotlin.jvm" version "2.1.10"
 }
 
 version = "v$mod_version"
@@ -25,12 +25,19 @@ repositories {
 			includeGroup "maven.modrinth"
 		}
 	}
+	maven {
+		name = 'ParchmentMC'
+		url = 'https://maven.parchmentmc.org'
+	}
 }
 
 dependencies {
 	// Minecraft
 	minecraft "com.mojang:minecraft:${minecraft_version}"
-	mappings loom.officialMojangMappings()
+	mappings loom.layered() {
+		officialMojangMappings()
+		parchment("org.parchmentmc.data:parchment-${minecraft_version}:${parchment_version}@zip")
+	}
 	modImplementation "net.fabricmc:fabric-loader:${loader_version}"
 
 	// Fabric APIs
@@ -38,16 +45,12 @@ dependencies {
 	modImplementation "net.fabricmc:fabric-language-kotlin:${fabric_kotlin_version}"
 
 	// Other dependencies
-	modApi "maven.modrinth:emi:${emi_version}"
-
-	// Optional compatibility
-	modApi "maven.modrinth:boatism:${boatism_version}"
-		modRuntimeOnly "maven.modrinth:cloth-config:13.0.121+fabric"
+	modApi "maven.modrinth:emi:${emi_version}+fabric"
 
 	// Dev environment
-	modRuntimeOnly "maven.modrinth:sodium:${sodium_version}"
+	modRuntimeOnly "maven.modrinth:sodium:${sodium_version}-fabric"
 	modRuntimeOnly "maven.modrinth:modmenu:${modmenu_version}"
-	modRuntimeOnly "maven.modrinth:emi:${emi_version}"
+	modRuntimeOnly "maven.modrinth:emi:${emi_version}+fabric"
 }
 
 // Ignore warn: https://youtrack.jetbrains.com/issue/IDEA-296490
@@ -77,36 +80,27 @@ fabricApi {
 	configureDataGeneration()
 }
 
-publishing {
-	publications {
-		mavenJava(MavenPublication) {
-			from components.java
-		}
-	}
-
-	// See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
-	repositories { }
-}
-
 jar {
+	inputs.property "archivesName", project.base.archivesName
+
 	from("LICENSE") {
 		rename { "${it}_${base.archivesName.get()}"}
 	}
 }
 
 tasks.withType(JavaCompile).configureEach {
-	it.options.release = 17
+	it.options.release = 21
 }
 
 tasks.withType(KotlinCompile).configureEach {
 	kotlinOptions {
-		jvmTarget = 17
+		jvmTarget = 21
 	}
 }
 
 java {
 	withSourcesJar()
 
-	sourceCompatibility = JavaVersion.VERSION_17
-	targetCompatibility = JavaVersion.VERSION_17
+	sourceCompatibility = JavaVersion.VERSION_21
+	targetCompatibility = JavaVersion.VERSION_21
 }

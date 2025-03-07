@@ -39,7 +39,7 @@ class LifebuoyRenderer(ctx: EntityRendererProvider.Context) : EntityRenderer<Lif
         poseStack.scale(-1.0f, -1.0f, 1.0f)
 
         val vertexConsumer = multiBufferSource.getBuffer(model.renderType(getTextureLocation(lifebuoy)))
-        model.renderToBuffer(poseStack, vertexConsumer, i, OverlayTexture.NO_OVERLAY, 1.0f, 1.0f, 1.0f, 1.0f)
+        model.renderToBuffer(poseStack, vertexConsumer, i, OverlayTexture.NO_OVERLAY)
 
         poseStack.popPose()
         super.render(lifebuoy, f, g, poseStack, multiBufferSource, i)
@@ -48,6 +48,6 @@ class LifebuoyRenderer(ctx: EntityRendererProvider.Context) : EntityRenderer<Lif
     override fun getTextureLocation(entity: Lifebuoy): ResourceLocation = TEXTURE
 
     companion object {
-        val TEXTURE: ResourceLocation = ResourceLocation(MOD_ID, "textures/entity/lifebuoy/body.png")
+        val TEXTURE: ResourceLocation = ResourceLocation.fromNamespaceAndPath(MOD_ID, "textures/entity/lifebuoy/body.png")
     }
 }

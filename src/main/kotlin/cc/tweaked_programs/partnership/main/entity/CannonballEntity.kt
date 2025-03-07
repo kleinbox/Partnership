@@ -27,9 +27,9 @@ class CannonballEntity : ThrowableItemProjectile {
 
     private val particle: ParticleOptions
         get() {
-            return (if (itemRaw.isEmpty) ParticleTypes.SMOKE else ItemParticleOption(
+            return (if (item.isEmpty) ParticleTypes.SMOKE else ItemParticleOption(
                 ParticleTypes.ITEM,
-                itemRaw
+                item
             )) as ParticleOptions
         }
 

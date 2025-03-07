@@ -14,7 +14,12 @@ import net.minecraft.world.level.Level
 
 class Hat(properties: Properties) : ArmorItem(ArmorMaterials.LEATHER, Type.HELMET, properties) {
 
-    override fun appendHoverText(itemStack: ItemStack, level: Level?, list: MutableList<Component>, tooltipFlag: TooltipFlag)
+    override fun appendHoverText(
+        itemStack: ItemStack,
+        context: TooltipContext,
+        list: MutableList<Component>,
+        tooltipFlag: TooltipFlag
+    )
             = AdvancedItemDescription.appendHoverText(descriptionId, false, list)
 
     override fun use(level: Level, player: Player, interactionHand: InteractionHand): InteractionResultHolder<ItemStack>?

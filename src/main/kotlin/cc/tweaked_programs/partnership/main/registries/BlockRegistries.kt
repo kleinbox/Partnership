@@ -24,7 +24,7 @@ object BlockRegistries {
 
         return Registry.register(
             BuiltInRegistries.BLOCK,
-            ResourceLocation(MOD_ID, name),
+            ResourceLocation.fromNamespaceAndPath(MOD_ID, name),
             blockSupplier.invoke(FabricBlockSettings.create())
         )
     }

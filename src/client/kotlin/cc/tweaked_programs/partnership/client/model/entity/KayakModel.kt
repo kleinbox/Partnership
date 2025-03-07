@@ -1,7 +1,6 @@
 package cc.tweaked_programs.partnership.client.model.entity
 
 import cc.tweaked_programs.partnership.main.MOD_ID
-import cc.tweaked_programs.partnership.main.compat.Compat
 import cc.tweaked_programs.partnership.main.entity.Kayak
 import com.mojang.blaze3d.vertex.PoseStack
 import com.mojang.blaze3d.vertex.VertexConsumer
@@ -27,37 +26,40 @@ class KayakModel(model: ModelPart) : EntityModel<Kayak>(), WaterPatchModel {
     private val paddleTwo: ModelPart = model.getChild("paddleTwo")
     private val paddleThree: ModelPart = model.getChild("paddleThree")
 
-    /*private val center: ModelPart = root.getChild("center")
-    private val corners: ModelPart = root.getChild("corners")
-    private val front: ModelPart = root.getChild("front")
-    private val back: ModelPart = root.getChild("back")*/
-
     private var waterPatch: ModelPart = model.getChild("waterPatch")
 
-    override fun renderToBuffer(poseStack: PoseStack, vertexConsumer: VertexConsumer, light: Int, overlay: Int, red: Float,
-                                green: Float, blue: Float, alpha: Float) {
+    override fun renderToBuffer(
+        poseStack: PoseStack,
+        vertexConsumer: VertexConsumer,
+        light: Int,
+        overlay: Int,
+        color: Int
+    ) {
 
-        root.render(poseStack, vertexConsumer, light, overlay, red, green, blue, alpha)
-        //waterPatch.render(poseStack, vertexConsumer, light, overlay, red, green, blue, alpha)
+        root.render(poseStack, vertexConsumer, light, overlay)
+        //waterPatch.render(poseStack, vertexConsumer, light, overlay)
     }
 
-    fun advancedRenderToBuffer(kayak: Kayak, poseStack: PoseStack, vertexConsumer: VertexConsumer, light: Int,
-                               overlay: Int, red: Float, green: Float, blue: Float, alpha: Float) {
+    fun advancedRenderToBuffer(kayak: Kayak,
+                               poseStack: PoseStack,
+                               vertexConsumer: VertexConsumer,
+                               light: Int,
+                               overlay: Int) {
 
-        renderToBuffer(poseStack, vertexConsumer, light, overlay, red, green, blue, alpha)
+        renderToBuffer(poseStack, vertexConsumer, light, overlay)
 
         if (kayak.passengers.size > 0)
             kayak.passengers.withIndex().forEach { (index, entity) ->
-                if (entity !is Animal && !Compat.boatism.isEngine(entity))
-                    getPaddle(index).render(poseStack, vertexConsumer, light, overlay, red, green, blue, alpha)
+                if (entity !is Animal)
+                    getPaddle(index).render(poseStack, vertexConsumer, light, overlay)
             }
-        else getPaddle(0).render(poseStack, vertexConsumer, light, overlay, red, green, blue, alpha)
+        else getPaddle(0).render(poseStack, vertexConsumer, light, overlay)
     }
 
     override fun setupAnim(kayak: Kayak, f: Float, g: Float, h: Float, i: Float, j: Float) {
         if (kayak.passengers.size > 0) {
             kayak.passengers.withIndex().forEach { (index, entity) ->
-                if (entity !is Animal && !Compat.boatism.isEngine(entity))
+                if (entity !is Animal)
                     paddleAnim(kayak, entity, index, f)
             }
         } else paddleAnim(kayak, null, 0, f)
@@ -74,7 +76,7 @@ class KayakModel(model: ModelPart) : EntityModel<Kayak>(), WaterPatchModel {
             paddle.setPos(6.0F, -20.5F, -1.4F)
             paddle.setRotation(1.7F, 1.4F, -0.1F)
         } else if (entity != null) {
-            paddle.setPos(0.0F, 0.0F, 2.5F-kayak.getPassengerZOffset(entity)*18F)
+            paddle.setPos(0.0F, 0.0F, 2.5F-kayak.getPassengerZOffset(entity).toFloat()*18F)
             paddle.setRotation(
                 (sin(time) * 0.2F),
                 (sin(time + if (time != 0F) (index.toFloat() * -0.5F) else 0F) * -0.6F),
@@ -90,7 +92,7 @@ class KayakModel(model: ModelPart) : EntityModel<Kayak>(), WaterPatchModel {
 
     companion object {
 
-        val LAYER_LOCATION: ModelLayerLocation = ModelLayerLocation(ResourceLocation(MOD_ID, "kayak"), "main")
+        val LAYER_LOCATION: ModelLayerLocation = ModelLayerLocation(ResourceLocation.fromNamespaceAndPath(MOD_ID, "kayak"), "main")
 
         private fun newPaddle(sub: String, modelPartData: PartDefinition): PartDefinition {
             return modelPartData.addOrReplaceChild(

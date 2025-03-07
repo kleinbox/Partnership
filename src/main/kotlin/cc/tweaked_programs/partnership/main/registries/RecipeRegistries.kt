@@ -11,13 +11,13 @@ object RecipeRegistries {
     init {
         Registry.register(
             BuiltInRegistries.RECIPE_SERIALIZER,
-            ResourceLocation(MOD_ID, "boatyard_construct_serializer"),
+            ResourceLocation.fromNamespaceAndPath(MOD_ID, "boatyard_construct_serializer"),
             BoatyardRecipe.SERIALIZER
         )
 
         Registry.register(
             BuiltInRegistries.RECIPE_TYPE,
-            ResourceLocation(MOD_ID, "boatyard_construct_recipe"),
+            ResourceLocation.fromNamespaceAndPath(MOD_ID, "boatyard_construct_recipe"),
             BoatyardRecipe.Companion.Type.TYPE
         )
     }

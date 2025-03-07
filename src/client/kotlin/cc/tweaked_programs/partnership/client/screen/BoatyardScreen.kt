@@ -20,7 +20,7 @@ class BoatyardScreen(
     title: Component) : AbstractContainerScreen<BoatyardMenu>(menu, inventory, title) {
 
     companion object {
-        val BG_TEXTURE = ResourceLocation(MOD_ID, "textures/gui/container/boatyard.png")
+        val BG_TEXTURE = ResourceLocation.fromNamespaceAndPath(MOD_ID, "textures/gui/container/boatyard.png")
     }
 
     override fun init() {

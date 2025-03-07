@@ -40,7 +40,7 @@ class KayakRenderer(ctx: EntityRendererProvider.Context) : EntityRenderer<Kayak>
         poseStack.scale(-1.0f, -1.0f, 1.0f)
 
         val vertexConsumer = multiBufferSource.getBuffer(model.renderType(getTextureLocation(kayak)))
-        model.advancedRenderToBuffer(kayak, poseStack, vertexConsumer, i, OverlayTexture.NO_OVERLAY, 1.0f, 1.0f, 1.0f, 1.0f)
+        model.advancedRenderToBuffer(kayak, poseStack, vertexConsumer, i, OverlayTexture.NO_OVERLAY)
 
         if (!kayak.isUnderWater) {
             val vertexConsumer2 = multiBufferSource.getBuffer(RenderType.waterMask())
@@ -54,6 +54,6 @@ class KayakRenderer(ctx: EntityRendererProvider.Context) : EntityRenderer<Kayak>
     override fun getTextureLocation(entity: Kayak): ResourceLocation = TEXTURE
 
     companion object {
-        val TEXTURE: ResourceLocation = ResourceLocation(MOD_ID, "textures/entity/kayak/body.png")
+        val TEXTURE: ResourceLocation = ResourceLocation.fromNamespaceAndPath(MOD_ID, "textures/entity/kayak/body.png")
     }
 }

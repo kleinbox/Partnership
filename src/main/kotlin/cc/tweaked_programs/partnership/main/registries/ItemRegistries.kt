@@ -3,15 +3,12 @@ package cc.tweaked_programs.partnership.main.registries
 import cc.tweaked_programs.partnership.main.MOD_ID
 import cc.tweaked_programs.partnership.main.entity.Kayak
 import cc.tweaked_programs.partnership.main.entity.Lifebuoy
-import cc.tweaked_programs.partnership.main.entity.Sailboat
 import cc.tweaked_programs.partnership.main.item.BoatyardItem
 import cc.tweaked_programs.partnership.main.item.Hat
-import cc.tweaked_programs.partnership.main.item.PaddleItem
 import cc.tweaked_programs.partnership.main.item.extendable.DescriptiveBlockItem
 import cc.tweaked_programs.partnership.main.item.extendable.DescriptivePlaceOnWaterBlockItem
 import cc.tweaked_programs.partnership.main.item.extendable.GenericBoatItem
 import cc.tweaked_programs.partnership.main.item.extendable.GenericDescriptiveBlockItem
-import net.fabricmc.fabric.api.item.v1.FabricItemSettings
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroupEntries
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents
 import net.minecraft.core.Registry
@@ -29,11 +26,11 @@ object ItemRegistries {
         name: String,
         category: ResourceKey<CreativeModeTab>? = null,
         categoryRegister: ((FabricItemGroupEntries, Item) -> Unit)? = null,
-        itemSupplier: (FabricItemSettings) -> T): T {
+        itemSupplier: (Item.Properties) -> T): T {
         val item = Registry.register(
             BuiltInRegistries.ITEM,
-            ResourceLocation(MOD_ID, name),
-            itemSupplier.invoke(FabricItemSettings())
+            ResourceLocation.fromNamespaceAndPath(MOD_ID, name),
+            itemSupplier.invoke(Item.Properties())
         )
 
         registered.add(item)
@@ -46,9 +43,7 @@ object ItemRegistries {
     val BOATYARD: BoatyardItem
     val KAYAK: GenericBoatItem
     val LIFEBUOY: GenericBoatItem
-    val SAILBOAT: GenericBoatItem
     val METAL_SCAFFOLDING: BlockItem
-    val PADDLE: PaddleItem
     val BUOY: DescriptivePlaceOnWaterBlockItem
     val CHAIN_BUOY: DescriptivePlaceOnWaterBlockItem
     val CAPTAINS_HAT: Hat
@@ -67,7 +62,7 @@ object ItemRegistries {
                 content.addAfter(Items.BAMBOO_CHEST_RAFT, item)
             },
             itemSupplier = { properties ->
-                properties.maxCount(1)
+                properties.stacksTo(1)
                 GenericBoatItem(
                     properties = properties,
                     boat = { level, x, y, z ->
@@ -87,7 +82,7 @@ object ItemRegistries {
                 content.addAfter(KAYAK, item)
             },
             itemSupplier = { properties ->
-                properties.maxCount(1)
+                properties.stacksTo(1)
                 GenericBoatItem(
                     properties = properties,
                     boat = { level, x, y, z ->
@@ -96,26 +91,6 @@ object ItemRegistries {
                     speed = Lifebuoy.SPEED_RANK,
                     mobility = Lifebuoy.MOBILITY_RANK,
                     space = Lifebuoy.SPACE_RANK
-                )
-            }
-        )
-
-        SAILBOAT = create(
-            name = "sailboat",
-            category = CreativeModeTabs.TOOLS_AND_UTILITIES,
-            categoryRegister = { content, item ->
-                content.addAfter(LIFEBUOY, item)
-            },
-            itemSupplier = { properties ->
-                properties.maxCount(1)
-                GenericBoatItem(
-                    properties = properties,
-                    boat = { level, x, y, z ->
-                        Sailboat(level, x, y, z)
-                    },
-                    speed = Sailboat.SPEED_RANK,
-                    mobility = Sailboat.MOBILITY_RANK,
-                    space = Sailboat.SPACE_RANK
                 )
             }
         )
@@ -129,7 +104,7 @@ object ItemRegistries {
             itemSupplier = { properties ->
                 BoatyardItem(
                     BlockRegistries.BOATYARD,
-                    properties.maxCount(64))
+                    properties.stacksTo(64))
             }
         )
 
@@ -140,7 +115,7 @@ object ItemRegistries {
                 content.addAfter(Items.IRON_BLOCK, item)
             },
             itemSupplier = { properties ->
-                BlockItem(BlockRegistries.METAL_SCAFFOLDING, properties.maxCount(64))
+                BlockItem(BlockRegistries.METAL_SCAFFOLDING, properties.stacksTo(64))
             }
         )
 
@@ -153,7 +128,7 @@ object ItemRegistries {
             itemSupplier = { properties ->
                 DescriptivePlaceOnWaterBlockItem(
                     BlockRegistries.BUOY,
-                    properties.maxCount(64))
+                    properties.stacksTo(64))
             }
         )
 
@@ -166,7 +141,7 @@ object ItemRegistries {
             itemSupplier = { properties ->
                 DescriptivePlaceOnWaterBlockItem(
                     BlockRegistries.CHAIN_BUOY,
-                    properties.maxCount(64))
+                    properties.stacksTo(64))
             }
         )
 
@@ -179,21 +154,7 @@ object ItemRegistries {
             itemSupplier = { properties ->
                 GenericDescriptiveBlockItem(
                     BlockRegistries.MARINE_CANNON,
-                    properties.maxCount(64), true)
-            }
-        )
-
-        PADDLE = create(
-            name = "paddle",
-            category = CreativeModeTabs.COMBAT,
-            categoryRegister = { content, item ->
-                content.addAfter(Items.TRIDENT.asItem(), item)
-            },
-            itemSupplier = { properties ->
-                PaddleItem(1, 0.25F, (-1.8f), properties
-                    .maxCount(1)
-                    .defaultDurability(Tiers.WOOD.uses)
-                    .durability(69))
+                    properties.stacksTo(64), true)
             }
         )
 
@@ -204,7 +165,7 @@ object ItemRegistries {
                 content.addAfter(Items.TURTLE_HELMET, item)
             },
             itemSupplier = { properties ->
-                Hat(properties.maxCount(1))
+                Hat(properties.stacksTo(1))
             }
         )
 
@@ -215,7 +176,7 @@ object ItemRegistries {
                 content.addAfter(CAPTAINS_HAT, item)
             },
             itemSupplier = { properties ->
-                Hat(properties.maxCount(1))
+                Hat(properties.stacksTo(1))
             }
         )
 
@@ -225,7 +186,7 @@ object ItemRegistries {
             categoryRegister = { content, item ->
                 content.addAfter(Items.EGG, item)
             },
-            itemSupplier = { properties -> Item(properties.maxCount(64)) }
+            itemSupplier = { properties -> Item(properties.stacksTo(64)) }
         )
 
         PLANK = create(
@@ -234,7 +195,7 @@ object ItemRegistries {
             categoryRegister = { content, item ->
                 content.addAfter(CANVAS_ROLL, item)
             },
-            itemSupplier = { properties -> Item(properties.maxCount(64)) }
+            itemSupplier = { properties -> Item(properties.stacksTo(64)) }
         )
 
         CANNONBALL = create(
@@ -243,7 +204,7 @@ object ItemRegistries {
             categoryRegister = { content, item ->
                 content.addAfter(PLANK, item)
             },
-            itemSupplier = { properties -> Item(properties.maxCount(64)) }
+            itemSupplier = { properties -> Item(properties.stacksTo(16)) }
         )
 
         ANCHOR = create(
@@ -252,7 +213,7 @@ object ItemRegistries {
             categoryRegister = { content, item ->
                 content.addAfter(Items.NETHERITE_BLOCK, item)
             },
-            itemSupplier = { properties -> DescriptiveBlockItem(BlockRegistries.ANCHOR, properties.maxCount(1)) }
+            itemSupplier = { properties -> DescriptiveBlockItem(BlockRegistries.ANCHOR, properties.stacksTo(1)) }
         )
     }
 }

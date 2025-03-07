@@ -4,9 +4,7 @@
   "compatibilityLevel": "JAVA_17",
   "mixins": [
     "BoatDespawnMixin",
-    "BoatMixin",
-    "EnchantmentHelperMixin",
-    "PlayerMixin"
+    "BoatMixin"
   ],
   "injectors": {
     "defaultRequire": 1

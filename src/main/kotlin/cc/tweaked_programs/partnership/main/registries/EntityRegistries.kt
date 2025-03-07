@@ -4,7 +4,6 @@ import cc.tweaked_programs.partnership.main.MOD_ID
 import cc.tweaked_programs.partnership.main.entity.CannonballEntity
 import cc.tweaked_programs.partnership.main.entity.Kayak
 import cc.tweaked_programs.partnership.main.entity.Lifebuoy
-import cc.tweaked_programs.partnership.main.entity.Sailboat
 import net.fabricmc.fabric.api.`object`.builder.v1.entity.FabricEntityTypeBuilder
 import net.minecraft.core.Registry
 import net.minecraft.core.registries.BuiltInRegistries
@@ -18,7 +17,7 @@ object EntityRegistries {
     private fun <E: Entity, T: EntityType<E>> create(name: String, type: T): T {
         return Registry.register(
             BuiltInRegistries.ENTITY_TYPE,
-            ResourceLocation(MOD_ID, name),
+            ResourceLocation.fromNamespaceAndPath(MOD_ID, name),
             type
         )
     }
@@ -26,21 +25,14 @@ object EntityRegistries {
     val KAYAK: EntityType<Kayak> = create(
         name = "kayak",
         type = FabricEntityTypeBuilder.create(MobCategory.MISC, ::Kayak)
-            .dimensions(EntityDimensions(1.6F, 0.6F, false))
+            .dimensions(EntityDimensions.scalable(1.6F, 0.6F))
             .build()
     )
 
     val LIFEBUOY: EntityType<Lifebuoy> = create(
         name = "lifebuoy",
         type = FabricEntityTypeBuilder.create(MobCategory.MISC, ::Lifebuoy)
-            .dimensions(EntityDimensions(1.5F, 0.5F, false))
-            .build()
-    )
-
-    val SAILBOAT: EntityType<Sailboat> = create(
-        name = "sailboat",
-        type = FabricEntityTypeBuilder.create(MobCategory.MISC, ::Sailboat)
-            .dimensions(EntityDimensions(1.25F, 0.4F, false))
+            .dimensions(EntityDimensions.scalable(1.5F, 0.5F))
             .build()
     )
 

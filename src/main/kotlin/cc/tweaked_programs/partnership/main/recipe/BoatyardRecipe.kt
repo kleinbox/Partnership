@@ -1,26 +1,25 @@
 package cc.tweaked_programs.partnership.main.recipe
 
 import cc.tweaked_programs.partnership.main.block.boatyard.BoatyardBlockEntity.Companion.INV_SIZE
-import cc.tweaked_programs.partnership.main.menu.inventory.ImplementedInventory
 import cc.tweaked_programs.partnership.main.recipe.BoatyardRecipe.Companion.Type.Companion.CODEC
-import com.mojang.serialization.Codec
+import cc.tweaked_programs.partnership.main.recipe.BoatyardRecipe.Companion.Type.Companion.STREAM_CODEC
+import com.mojang.serialization.MapCodec
 import com.mojang.serialization.codecs.RecordCodecBuilder
+import net.minecraft.core.HolderLookup
 import net.minecraft.core.NonNullList
 import net.minecraft.core.RegistryAccess
-import net.minecraft.network.FriendlyByteBuf
+import net.minecraft.network.RegistryFriendlyByteBuf
+import net.minecraft.network.codec.StreamCodec
 import net.minecraft.world.item.ItemStack
-import net.minecraft.world.item.crafting.Ingredient
-import net.minecraft.world.item.crafting.Recipe
-import net.minecraft.world.item.crafting.RecipeSerializer
-import net.minecraft.world.item.crafting.RecipeType
+import net.minecraft.world.item.crafting.*
 import net.minecraft.world.level.Level
 
 
 class BoatyardRecipe(private val ingredients: MutableList<ItemStack> = MutableList(INV_SIZE-1) {ItemStack.EMPTY },
                      private val output: ItemStack = ItemStack.EMPTY
-) : Recipe<ImplementedInventory> {
+) : Recipe<RecipeInput> {
 
-    override fun matches(inv: ImplementedInventory, level: Level): Boolean {
+    override fun matches(inv: RecipeInput, level: Level): Boolean {
         if (level.isClientSide)
             return false
 
@@ -33,7 +32,7 @@ class BoatyardRecipe(private val ingredients: MutableList<ItemStack> = MutableLi
         return true
     }
 
-    override fun assemble(inv: ImplementedInventory, registryAccess: RegistryAccess): ItemStack = output.copy()
+    override fun assemble(inv: RecipeInput, registries: HolderLookup.Provider): ItemStack = output.copy()
 
     override fun canCraftInDimensions(i: Int, j: Int): Boolean = true
 
@@ -51,7 +50,9 @@ class BoatyardRecipe(private val ingredients: MutableList<ItemStack> = MutableLi
         return list
     }
 
-    override fun getResultItem(registryAccess: RegistryAccess): ItemStack = output
+    override fun getResultItem(registries: HolderLookup.Provider): ItemStack = output
+
+    fun getResultItem(): ItemStack = getResultItem(RegistryAccess.EMPTY)
 
     override fun getSerializer(): RecipeSerializer<*> = SERIALIZER
 
@@ -62,39 +63,27 @@ class BoatyardRecipe(private val ingredients: MutableList<ItemStack> = MutableLi
         val SERIALIZER = Serializer()
 
         class Serializer : RecipeSerializer<BoatyardRecipe> {
-
-            override fun codec(): Codec<BoatyardRecipe> = CODEC
-
-            override fun fromNetwork(friendlyByteBuf: FriendlyByteBuf): BoatyardRecipe {
-                val ingredients: MutableList<ItemStack> = MutableList(INV_SIZE-1) { ItemStack.EMPTY }
-
-                repeat(INV_SIZE-1) { index ->
-                    ingredients[index] = friendlyByteBuf.readItem()
-                }
-                val output: ItemStack = friendlyByteBuf.readItem()
-
-                return BoatyardRecipe(ingredients, output)
-            }
-
-            override fun toNetwork(friendlyByteBuf: FriendlyByteBuf, recipe: BoatyardRecipe) {
-                recipe.getIngredientsAsItemStacks().forEach { ingredient ->
-                    friendlyByteBuf.writeItem(ingredient)
-                }
-                friendlyByteBuf.writeItem(recipe.getResultItem(RegistryAccess.EMPTY))
-            }
+            override fun codec(): MapCodec<BoatyardRecipe> = CODEC
+            override fun streamCodec(): StreamCodec<RegistryFriendlyByteBuf, BoatyardRecipe>? = STREAM_CODEC
         }
 
         class Type : RecipeType<BoatyardRecipe> {
             companion object {
                 val TYPE: Type = Type()
 
-                val CODEC: Codec<BoatyardRecipe> =
-                    RecordCodecBuilder.create { instance: RecordCodecBuilder.Instance<BoatyardRecipe> -> instance.group(
+                val CODEC: MapCodec<BoatyardRecipe> =
+                    RecordCodecBuilder.mapCodec { instance: RecordCodecBuilder.Instance<BoatyardRecipe> -> instance.group(
                         ItemStack.CODEC.listOf().fieldOf("ingredients").forGetter { it.getIngredientsAsItemStacks() },
                         ItemStack.CODEC.fieldOf("output").forGetter { it.getResultItem(RegistryAccess.EMPTY) }
                     ).apply(instance) { output, ingredient ->
                         BoatyardRecipe(output, ingredient)
                     } }
+
+                val STREAM_CODEC: StreamCodec<RegistryFriendlyByteBuf, BoatyardRecipe>? = StreamCodec.composite(
+                    ItemStack.LIST_STREAM_CODEC, BoatyardRecipe::getIngredientsAsItemStacks,
+                    ItemStack.STREAM_CODEC, BoatyardRecipe::getResultItem,
+                    ::BoatyardRecipe
+                )
             }
         }
     }

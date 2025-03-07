@@ -32,19 +32,23 @@ class MarineCannonLegsModel(root: ModelPart) :
             Direction.SOUTH -> 180F
             Direction.WEST -> 90F
             else -> 0F
-        } + entity.getXRot()) * MAGIKK, 0F)
+        } + entity.xRot) * MAGIKK, 0F)
     }
 
-    override fun renderToBuffer(poseStack: PoseStack, vertexConsumer: VertexConsumer, packedLight:Int,
-                                packedOverlay: Int, red: Float, green: Float, blue: Float, alpha: Float) {
-
-        root.render(poseStack, vertexConsumer, packedLight, packedOverlay, red, green, blue, alpha)
+    override fun renderToBuffer(
+        poseStack: PoseStack,
+        vertexConsumer: VertexConsumer,
+        packedLight: Int,
+        packedOverlay: Int,
+        color: Int
+    ) {
+        root.render(poseStack, vertexConsumer, packedLight, packedOverlay)
     }
 
     companion object {
-        val LAYER_LOCATION: ModelLayerLocation = ModelLayerLocation(ResourceLocation(MOD_ID, "marine_cannon"), "main")
+        val LAYER_LOCATION: ModelLayerLocation = ModelLayerLocation(ResourceLocation.fromNamespaceAndPath(MOD_ID, "marine_cannon"), "main")
 
-        val TEXTURE = ResourceLocation(MOD_ID, "textures/entity/marine_cannon/legs.png")
+        val TEXTURE = ResourceLocation.fromNamespaceAndPath(MOD_ID, "textures/entity/marine_cannon/legs.png")
 
         private const val MAGIKK: Float = (PI.toFloat() / 180f)
 

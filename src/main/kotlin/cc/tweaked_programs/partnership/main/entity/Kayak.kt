@@ -1,6 +1,5 @@
 package cc.tweaked_programs.partnership.main.entity
 
-import cc.tweaked_programs.partnership.main.compat.Compat
 import cc.tweaked_programs.partnership.main.registries.EntityRegistries
 import cc.tweaked_programs.partnership.main.registries.ItemRegistries
 import net.minecraft.world.entity.Entity
@@ -10,7 +9,7 @@ import net.minecraft.world.entity.animal.Animal
 import net.minecraft.world.entity.vehicle.Boat
 import net.minecraft.world.item.Item
 import net.minecraft.world.level.Level
-import org.joml.Vector3f
+import net.minecraft.world.phys.Vec3
 
 class Kayak(type: EntityType<out Boat>, level: Level) : GenericBoat(type, level) {
 
@@ -34,15 +33,9 @@ class Kayak(type: EntityType<out Boat>, level: Level) : GenericBoat(type, level)
 
     override fun getSinglePassengerXOffset(): Float = 0.6F
 
-    override fun getMaxPassengers(): Int {
-        passengers.forEach {
-            if (Compat.boatism.isEngine(it))
-                return 4
-        }
-        return 3
-    }
+    override fun getMaxPassengers(): Int = 3
 
-    fun getPassengerZOffset(entity: Entity): Float {
+    fun getPassengerZOffset(entity: Entity): Double {
         val index = passengers.indexOf(entity)
         //val animalFactor = (if (entity is Animal) 1.2F else 1.0F)
 
@@ -54,7 +47,7 @@ class Kayak(type: EntityType<out Boat>, level: Level) : GenericBoat(type, level)
             else -> 0F
         }
 
-        return offset
+        return offset.toDouble()
     }
 
     override fun positionRider(entity: Entity, moveFunction: MoveFunction) {
@@ -65,13 +58,6 @@ class Kayak(type: EntityType<out Boat>, level: Level) : GenericBoat(type, level)
         }
     }
 
-    override fun clampRotation(entity: Entity) {
-        if (Compat.boatism.isEngine(entity))
-            entity.setYBodyRot(yRot)
-        else
-            super.clampRotation(entity)
-    }
-
-    override fun getPassengerAttachmentPoint(entity: Entity, entityDimensions: EntityDimensions, f: Float): Vector3f
-        = Vector3f(0.0F, entityDimensions.height / 2.5F, if (Compat.boatism.isEngine(entity)) -1.88F else getPassengerZOffset(entity))
+    override fun getPassengerAttachmentPoint(entity: Entity, entityDimensions: EntityDimensions, f: Float): Vec3
+        = Vec3(0.0, entityDimensions.height / 2.5, getPassengerZOffset(entity))
 }

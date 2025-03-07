@@ -32,9 +32,6 @@
   "item.partnership.sailboat": "Sailboat",
   "tooltip.item.partnership.sailboat": "Faster than a normal boat because of its sail.",
 
-  "item.partnership.paddle": "Paddle",
-  "tooltip.item.partnership.paddle": "Has +1 knockback by default.",
-
   "item.partnership.canvas_roll": "Canvas Roll",
   "item.partnership.plank": "Plank",
 
@@ -48,7 +45,6 @@
 
   "entity.partnership.kayak": "Kayak",
   "entity.partnership.lifebuoy": "Lifebuoy",
-  "entity.partnership.sailboat": "Sailboat",
   "entity.partnership.cannonball": "Cannonball",
 
   "emi.category.partnership.boatyard": "Shipyard industry",

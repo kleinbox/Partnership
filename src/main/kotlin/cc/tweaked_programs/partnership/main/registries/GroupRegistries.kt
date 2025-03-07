@@ -18,11 +18,11 @@ object GroupRegistries {
         .build()
 
     init {
-        Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, ResourceLocation(MOD_ID, "item_group"), group)
+        Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, ResourceLocation.fromNamespaceAndPath(MOD_ID, "item_group"), group)
 
         val groupRegistryKey = ResourceKey.create(
             BuiltInRegistries.CREATIVE_MODE_TAB.key(),
-            ResourceLocation(MOD_ID, "item_group")
+            ResourceLocation.fromNamespaceAndPath(MOD_ID, "item_group")
         )
 
         ItemGroupEvents.modifyEntriesEvent(groupRegistryKey).register { group ->

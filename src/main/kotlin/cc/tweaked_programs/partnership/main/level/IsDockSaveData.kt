@@ -1,6 +1,9 @@
 package cc.tweaked_programs.partnership.main.level
 
-import net.minecraft.nbt.*
+import net.minecraft.core.HolderLookup
+import net.minecraft.nbt.CompoundTag
+import net.minecraft.nbt.ListTag
+import net.minecraft.nbt.Tag
 import net.minecraft.util.datafix.DataFixTypes
 import net.minecraft.world.level.ChunkPos
 import net.minecraft.world.level.saveddata.SavedData
@@ -10,7 +13,7 @@ class IsDockSaveData : SavedData() {
 
     var dockableChunks: MutableMap<Long, Int> = mutableMapOf()
 
-    override fun save(tag: CompoundTag): CompoundTag {
+    override fun save(tag: CompoundTag, registries: HolderLookup.Provider): CompoundTag {
         val chunksTag = ListTag()
         dockableChunks.forEach { (pos, value) ->
             chunksTag.add(CompoundTag().apply {
@@ -37,7 +40,7 @@ class IsDockSaveData : SavedData() {
 
         fun create() = IsDockSaveData()
 
-        private fun load(tag: CompoundTag): IsDockSaveData {
+        private fun load(tag: CompoundTag, registries: HolderLookup.Provider): IsDockSaveData {
             val data = this.create()
 
             tag.getList(CHUNKS_KEY_TAG, Tag.TAG_COMPOUND.toInt()).forEach { entryTag ->

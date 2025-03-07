@@ -29,10 +29,10 @@ class MarineCannonBlockEntityRenderer(ctx: BlockEntityRendererProvider.Context) 
         pipe.setupAnim(blockEntity, f)
 
         val legsVertexConsumer: VertexConsumer = multiBufferSource.getBuffer(legs.renderType(MarineCannonLegsModel.TEXTURE))
-        legs.renderToBuffer(poseStack, legsVertexConsumer, packedLight, OverlayTexture.NO_OVERLAY, 1.0f, 1.0f, 1.0f, 1.0f)
+        legs.renderToBuffer(poseStack, legsVertexConsumer, packedLight, OverlayTexture.NO_OVERLAY)
 
         val pipeVertexConsumer: VertexConsumer = multiBufferSource.getBuffer(pipe.renderType(MarineCannonPipeModel.TEXTURE))
-        pipe.renderToBuffer(poseStack, pipeVertexConsumer, packedLight, OverlayTexture.NO_OVERLAY, 1.0f, 1.0f, 1.0f, 1.0f)
+        pipe.renderToBuffer(poseStack, pipeVertexConsumer, packedLight, OverlayTexture.NO_OVERLAY)
 
         poseStack.popPose()
     }

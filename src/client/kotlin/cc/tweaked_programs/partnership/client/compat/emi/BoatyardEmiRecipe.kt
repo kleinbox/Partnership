@@ -19,7 +19,7 @@ class BoatyardEmiRecipe(recipe: BoatyardRecipe) : EmiRecipe {
 
     override fun getCategory(): EmiRecipeCategory = PartnershipEmi.BOATYARD_CATEGORY
 
-    override fun getId() = ResourceLocation(MOD_ID, id)
+    override fun getId() = ResourceLocation.fromNamespaceAndPath(MOD_ID, id)
 
     override fun getInputs() = input
 

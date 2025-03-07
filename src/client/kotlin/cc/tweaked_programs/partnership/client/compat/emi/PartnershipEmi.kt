@@ -22,10 +22,10 @@ class PartnershipEmi : EmiPlugin {
     }
 
     companion object {
-        private val SPRITES = ResourceLocation(MOD_ID, "textures/gui/emi_simplified_containers.png")
+        private val SPRITES = ResourceLocation.fromNamespaceAndPath(MOD_ID, "textures/gui/emi_simplified_containers.png")
 
         val BOATYARD_WORKSTATION: EmiStack = EmiStack.of(ItemRegistries.BOATYARD)
-        val BOATYARD_CATEGORY = EmiRecipeCategory(ResourceLocation(MOD_ID, "boatyard"), BOATYARD_WORKSTATION,
+        val BOATYARD_CATEGORY = EmiRecipeCategory(ResourceLocation.fromNamespaceAndPath(MOD_ID, "boatyard"), BOATYARD_WORKSTATION,
             EmiTexture(SPRITES, 0, 0, 16, 16))
     }
 }

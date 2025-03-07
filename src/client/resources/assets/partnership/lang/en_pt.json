@@ -31,9 +31,6 @@
   "item.partnership.sailboat": "Schooner",
   "tooltip.item.partnership.sailboat": "Faster than a normal boat because of its sail.",
 
-  "item.partnership.paddle": "Oar",
-  "tooltip.item.partnership.paddle": "Be boastin' a +1 shove-away charm from the start",
-
   "item.partnership.canvas_roll": "Sailcloth Scroll",
   "item.partnership.plank": "Ship's Plank",
 
@@ -47,7 +44,6 @@
 
   "entity.partnership.kayak": "Kayak",
   "entity.partnership.lifebuoy": "Sparrow's Saver",
-  "entity.partnership.sailboat": "Schooner",
   "entity.partnership.cannonball": "Matey Missile",
 
   "emi.category.partnership.boatyard": "Shipwright's treasures",

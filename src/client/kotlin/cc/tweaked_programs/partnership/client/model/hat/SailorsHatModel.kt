@@ -19,10 +19,14 @@ import java.util.function.Function
 
 class SailorsHatModel(val root: ModelPart) : Model(Function { resourceLocation: ResourceLocation -> RenderType.entityTranslucent(resourceLocation) }) {
 
-    override fun renderToBuffer(poseStack: PoseStack, vertexConsumer: VertexConsumer, packedLight: Int,
-                                packedOverlay: Int, red: Float, green: Float, blue: Float, alpha: Float) {
-
-        root.render(poseStack, vertexConsumer, packedLight, packedOverlay, red, green, blue, alpha)
+    override fun renderToBuffer(
+        poseStack: PoseStack,
+        vertexConsumer: VertexConsumer,
+        packedLight: Int,
+        packedOverlay: Int,
+        color: Int
+    ) {
+        root.render(poseStack, vertexConsumer, packedLight, packedOverlay)
     }
 
     fun setupAnim(humanoidModel: HumanoidModel<LivingEntity>) {
@@ -31,7 +35,7 @@ class SailorsHatModel(val root: ModelPart) : Model(Function { resourceLocation: 
     }
 
     companion object {
-        val TEXTURE = ResourceLocation(MOD_ID, "textures/models/armor/sailors_hat.png")
+        val TEXTURE = ResourceLocation.fromNamespaceAndPath(MOD_ID, "textures/models/armor/sailors_hat.png")
 
         fun createBodyLayer(): LayerDefinition {
             val meshdefinition = MeshDefinition()

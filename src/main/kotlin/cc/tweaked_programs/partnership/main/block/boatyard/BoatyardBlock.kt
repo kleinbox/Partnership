@@ -6,7 +6,6 @@ import com.mojang.serialization.MapCodec
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
 import net.minecraft.world.Containers
-import net.minecraft.world.InteractionHand
 import net.minecraft.world.InteractionResult
 import net.minecraft.world.MenuProvider
 import net.minecraft.world.entity.LivingEntity
@@ -33,10 +32,13 @@ class BoatyardBlock(properties: Properties) : HorizontalDirectionalBlock(propert
         return BoatyardBlockEntity(blockPos, blockState)
     }
 
-    @Suppress("OVERRIDE_DEPRECATION")
-    override fun use(blockState: BlockState, level: Level, blockPos: BlockPos, player: Player,
-                     interactionHand: InteractionHand, blockHitResult: BlockHitResult): InteractionResult {
-
+    override fun useWithoutItem(
+        blockState: BlockState,
+        level: Level,
+        blockPos: BlockPos,
+        player: Player,
+        blockHitResult: BlockHitResult
+    ): InteractionResult {
         if (level.isClientSide) return InteractionResult.SUCCESS
 
         val menuProvider = blockState.getMenuProvider(level, blockPos)
@@ -46,7 +48,6 @@ class BoatyardBlock(properties: Properties) : HorizontalDirectionalBlock(propert
         return InteractionResult.SUCCESS
     }
 
-    @Suppress("OVERRIDE_DEPRECATION")
     override fun getMenuProvider(blockState: BlockState, level: Level, blockPos: BlockPos): MenuProvider? {
         val blockEntity = level.getBlockEntity(blockPos)
         return if (blockEntity is BoatyardBlockEntity) BoatyardBlockEntity.getMainBE(blockEntity) else null
@@ -60,7 +61,6 @@ class BoatyardBlock(properties: Properties) : HorizontalDirectionalBlock(propert
         )
     }
 
-    @Suppress("DEPRECATION", "OVERRIDE_DEPRECATION")
     override fun onRemove(blockState: BlockState, level: Level, blockPos: BlockPos, newBlockState: BlockState,
                           moved: Boolean) {
         if (blockState.block == newBlockState.block)
@@ -75,7 +75,7 @@ class BoatyardBlock(properties: Properties) : HorizontalDirectionalBlock(propert
         super.onRemove(blockState, level, blockPos, newBlockState, moved)
     }
 
-    override fun codec(): MapCodec<out HorizontalDirectionalBlock> = throw NotImplementedError("Normally not required in 1.20.4")
+    override fun codec(): MapCodec<out HorizontalDirectionalBlock> = simpleCodec(::BoatyardBlock)
 
     override fun createBlockStateDefinition(builder: StateDefinition.Builder<Block, BlockState>) { builder
         .add(BlockStateProperties.HORIZONTAL_FACING)
@@ -89,7 +89,6 @@ class BoatyardBlock(properties: Properties) : HorizontalDirectionalBlock(propert
         .setValue(BlockStateProperties.WATERLOGGED, ctx.level
             .getFluidState(ctx.clickedPos).type === Fluids.WATER)
 
-    @Suppress("OVERRIDE_DEPRECATION", "DEPRECATION")
     override fun updateShape(blockState: BlockState, direction: Direction, targetBlockState: BlockState,
                              levelAccessor: LevelAccessor, blockPos: BlockPos, targetBlockPos: BlockPos): BlockState? {
 
@@ -99,7 +98,6 @@ class BoatyardBlock(properties: Properties) : HorizontalDirectionalBlock(propert
         return super.updateShape(blockState, direction, targetBlockState, levelAccessor, blockPos, targetBlockPos)
     }
 
-    @Suppress("OVERRIDE_DEPRECATION", "DEPRECATION")
     override fun getFluidState(blockState: BlockState): FluidState {
         if (blockState.getValue(ChainBlock.WATERLOGGED))
             return Fluids.WATER.getSource(false)
@@ -145,7 +143,6 @@ class BoatyardBlock(properties: Properties) : HorizontalDirectionalBlock(propert
 
     override fun hasDynamicShape(): Boolean = false
 
-    @Suppress("OVERRIDE_DEPRECATION")
     override fun getShape(blockState: BlockState, blockGetter: BlockGetter, blockPos: BlockPos,
                           collisionContext: CollisionContext): VoxelShape {
 

@@ -26,7 +26,6 @@ class MetalScaffoldingBlock(properties: Properties) : TransparentBlock(propertie
         )
     }
 
-    @Suppress("OVERRIDE_DEPRECATION")
     override fun getShape(blockState: BlockState, blockGetter: BlockGetter, blockPos: BlockPos,
                           collisionContext: CollisionContext): VoxelShape {
         if (!collisionContext.isHoldingItem(blockState.block.asItem())) {
@@ -40,7 +39,6 @@ class MetalScaffoldingBlock(properties: Properties) : TransparentBlock(propertie
         } else return Shapes.block()
     }
 
-    @Suppress("OVERRIDE_DEPRECATION")
     override fun getInteractionShape(blockState: BlockState, blockGetter: BlockGetter, blockPos: BlockPos): VoxelShape {
         return Shapes.block()
     }
@@ -53,7 +51,6 @@ class MetalScaffoldingBlock(properties: Properties) : TransparentBlock(propertie
         .setValue(BlockStateProperties.WATERLOGGED, ctx.level
             .getFluidState(ctx.clickedPos).type === Fluids.WATER)
 
-    @Suppress("OVERRIDE_DEPRECATION", "DEPRECATION")
     override fun updateShape(blockState: BlockState, direction: Direction, targetBlockState: BlockState,
                              levelAccessor: LevelAccessor, blockPos: BlockPos, targetBlockPos: BlockPos): BlockState? {
 
@@ -63,7 +60,6 @@ class MetalScaffoldingBlock(properties: Properties) : TransparentBlock(propertie
         return super.updateShape(blockState, direction, targetBlockState, levelAccessor, blockPos, targetBlockPos)
     }
 
-    @Suppress("OVERRIDE_DEPRECATION", "DEPRECATION")
     override fun getFluidState(blockState: BlockState): FluidState {
         if (blockState.getValue(ChainBlock.WATERLOGGED))
             return Fluids.WATER.getSource(false)
