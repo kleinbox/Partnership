@@ -21,7 +21,7 @@
   "tooltip.item.partnership.sailors_hat": "Worn by the crew.",
 
   "block.partnership.marine_cannon": "Marine Cannon",
-  "tooltip.block.partnership.marine_cannon": "Can be configured and fired from a given angle. Sinks ships immediately when hit.\nMust be loaded with a Cannonball and up to three Gunpowder and then started with a redstone signal.",
+  "tooltip.block.partnership.marine_cannon": "Shoots Cannonballs when powered. Ships hit with it will sink.",
 
   "item.partnership.kayak": "Kayak",
   "tooltip.item.partnership.kayak": "Slightly larger than a normal boat, but it has room for up to three passengers.",
