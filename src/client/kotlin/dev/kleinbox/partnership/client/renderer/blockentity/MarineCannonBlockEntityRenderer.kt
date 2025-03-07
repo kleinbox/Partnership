@@ -5,17 +5,18 @@ import com.mojang.blaze3d.vertex.VertexConsumer
 import com.mojang.math.Axis
 import dev.kleinbox.partnership.client.model.marine_cannon.MarineCannonLegsModel
 import dev.kleinbox.partnership.client.model.marine_cannon.MarineCannonPipeModel
+import dev.kleinbox.partnership.main.block.cannon.MarineCannonBlockEntity
 import net.minecraft.client.renderer.MultiBufferSource
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider
 import net.minecraft.client.renderer.texture.OverlayTexture
 
-class MarineCannonBlockEntityRenderer(ctx: BlockEntityRendererProvider.Context) : BlockEntityRenderer<dev.kleinbox.partnership.main.block.cannon.MarineCannonBlockEntity> {
+class MarineCannonBlockEntityRenderer(ctx: BlockEntityRendererProvider.Context) : BlockEntityRenderer<MarineCannonBlockEntity> {
 
     private val legs = MarineCannonLegsModel(MarineCannonLegsModel.createBodyLayer().bakeRoot())
     private val pipe = MarineCannonPipeModel(MarineCannonPipeModel.createBodyLayer().bakeRoot())
 
-    override fun render(blockEntity: dev.kleinbox.partnership.main.block.cannon.MarineCannonBlockEntity, f: Float, poseStack: PoseStack,
+    override fun render(blockEntity: MarineCannonBlockEntity, f: Float, poseStack: PoseStack,
                         multiBufferSource: MultiBufferSource, packedLight: Int, j: Int) {
 
         poseStack.pushPose()

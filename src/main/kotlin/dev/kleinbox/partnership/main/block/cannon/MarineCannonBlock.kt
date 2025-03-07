@@ -82,7 +82,7 @@ class MarineCannonBlock(properties: Properties) : BaseEntityBlock(properties), E
         blockEntity.balls++
         blockEntity.setChanged()
 
-        level.playSound(null, pos, SoundEvents.DECORATED_POT_PLACE, SoundSource.BLOCKS, 1f, 0.3F)
+        level.playSound(null, pos, SoundEvents.DECORATED_POT_PLACE, SoundSource.BLOCKS, 0.6f, 0.3F)
 
         return ItemInteractionResult.SUCCESS
     }

@@ -3,6 +3,7 @@ package dev.kleinbox.partnership.client.model.marine_cannon
 import com.mojang.blaze3d.vertex.PoseStack
 import com.mojang.blaze3d.vertex.VertexConsumer
 import dev.kleinbox.partnership.main.MOD_ID
+import dev.kleinbox.partnership.main.block.cannon.MarineCannonBlockEntity
 import net.minecraft.client.model.Model
 import net.minecraft.client.model.geom.ModelPart
 import net.minecraft.client.model.geom.PartPose
@@ -23,10 +24,10 @@ class MarineCannonPipeModel(root: ModelPart) :
     private val pipe: ModelPart = root.getChild("pipe")
     private val string: ModelPart = pipe.getChild("string")
 
-    fun setupAnim(entity: dev.kleinbox.partnership.main.block.cannon.MarineCannonBlockEntity, partialTicks: Float) {
+    fun setupAnim(entity: MarineCannonBlockEntity, partialTicks: Float) {
         val rotation = (entity.state.getValue(BlockStateProperties.HORIZONTAL_FACING).toYRot() + entity.xRot) * MAGIKK
         pipe.setRotation(entity.yRot * MAGIKK, rotation, 0F)
-        string.z = -2.01F+((3F/ dev.kleinbox.partnership.main.block.cannon.MarineCannonBlockEntity.MAX_LOAD*(entity.balls.toFloat())).toInt())
+        string.z = -3.01F+(Math.round(3F/MarineCannonBlockEntity.MAX_LOAD*(entity.balls.toFloat())))
     }
 
     override fun renderToBuffer(
