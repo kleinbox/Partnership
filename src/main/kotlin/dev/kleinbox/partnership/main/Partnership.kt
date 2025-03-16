@@ -1,5 +1,6 @@
 package dev.kleinbox.partnership.main
 
+import dev.kleinbox.partnership.main.entity.BoatData
 import dev.kleinbox.partnership.main.registries.*
 import net.fabricmc.api.ModInitializer
 import org.slf4j.Logger
@@ -24,5 +25,6 @@ object Partnership : ModInitializer {
 		NetworkRegistries
 		GameRuleRegistries
 		CommandRegistries
+		BoatData
 	}
 }

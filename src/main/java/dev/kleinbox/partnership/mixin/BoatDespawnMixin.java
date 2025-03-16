@@ -1,5 +1,6 @@
 package dev.kleinbox.partnership.mixin;
 
+import dev.kleinbox.partnership.main.entity.BoatData;
 import dev.kleinbox.partnership.main.level.command.MarkChunkAsSeaport;
 import dev.kleinbox.partnership.main.registries.GameRuleRegistries;
 import net.minecraft.nbt.CompoundTag;
@@ -21,15 +22,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.List;
 
+@SuppressWarnings("UnstableApiUsage")
 @Mixin(Boat.class)
 abstract public class BoatDespawnMixin extends VehicleEntity implements VariantHolder<Boat.Type> {
     public BoatDespawnMixin(EntityType<?> entityType, Level level) {
         super(entityType, level);
     }
-
-    @Unique
-    @SuppressWarnings("WrongEntityDataParameterClass")
-    private static final EntityDataAccessor<Integer> DATA_ID_DESPAWN = SynchedEntityData.defineId(Boat.class, EntityDataSerializers.INT);
 
     @Inject(at = @At("RETURN"), method = "<init>(Lnet/minecraft/world/entity/EntityType;Lnet/minecraft/world/level/Level;)V")
     public void partnership$defineDespawnTimer(EntityType<? extends Boat> entityType, Level level, CallbackInfo ci) {
@@ -37,12 +35,15 @@ abstract public class BoatDespawnMixin extends VehicleEntity implements VariantH
         if (timer < 0)
             timer = Integer.MAX_VALUE;
 
-        setDespawnTimer(timer);
+        BoatData data = getAttachedOrCreate(BoatData.Companion.getDATA_TYPE());
+        data.setDespawn(timer);
+        setAttached(BoatData.Companion.getDATA_TYPE(), data);
     }
 
     @Inject(at = @At("HEAD"), method = "tick")
     public void partnership$shouldDespawn(CallbackInfo ci) {
-        int despawnTimer = getDespawnTimer();
+        BoatData data = getAttachedOrCreate(BoatData.Companion.getDATA_TYPE());
+        int despawnTimer = data.getDespawn();
         int definedDespawnTimer = getDefinedDespawnTimer(this.level());
 
         if (definedDespawnTimer >= 0 && !this.level().isClientSide && this.level() instanceof ServerLevel serverLevel) {
@@ -62,42 +63,19 @@ abstract public class BoatDespawnMixin extends VehicleEntity implements VariantH
                             despawnTimer = definedDespawnTimer;
 
                         // Update
-                        setDespawnTimer(despawnTimer);
+                        data.setDespawn(despawnTimer);
                     } else if (despawnTimer == 0) {
                         // Goodbye :)
                         this.discard();
                     }
                 } else if (despawnTimer >= 0) {
                     // Reset timer
-                    setDespawnTimer(getDefinedDespawnTimer(this.level()));
+                    data.setDespawn(getDefinedDespawnTimer(this.level()));
                 }
+
+                setAttached(BoatData.Companion.getDATA_TYPE(), data);
             }
         }
-    }
-
-    @Inject(at = @At("TAIL"), method = "defineSynchedData")
-    protected void partnership$defineDespawnDataId(SynchedEntityData.Builder builder, CallbackInfo ci) {
-        builder.define(DATA_ID_DESPAWN, -1);
-    }
-
-    @Inject(at = @At("TAIL"), method = "addAdditionalSaveData")
-    protected void partnership$addDespawnSaveData(CompoundTag compoundTag, CallbackInfo ci) {
-        compoundTag.putInt("despawnTimer", getDespawnTimer());
-    }
-
-    @Inject(at = @At("TAIL"), method = "readAdditionalSaveData")
-    protected void readAdditionalSaveData(CompoundTag compoundTag, CallbackInfo ci) {
-        setDespawnTimer(compoundTag.getInt("despawnTimer"));
-    }
-
-    @Unique
-    public void setDespawnTimer(int timer) {
-        this.entityData.set(DATA_ID_DESPAWN, timer);
-    }
-
-    @Unique
-    public int getDespawnTimer() {
-        return this.entityData.get(DATA_ID_DESPAWN);
     }
 
     @Unique
