@@ -24,6 +24,7 @@ class BoatyardScreen(
     }
 
     override fun init() {
+        super.init()
         imageWidth = 183
         imageHeight = 178
 

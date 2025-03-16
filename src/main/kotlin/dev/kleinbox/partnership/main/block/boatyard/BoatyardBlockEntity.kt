@@ -30,6 +30,11 @@ class BoatyardBlockEntity(val pos: BlockPos, val state: BlockState) : BlockEntit
 
     val isDummy: Boolean = state.getValue(BlockStateProperties.EXTENDED)
     override val inventory: NonNullList<ItemStack> = NonNullList.withSize(INV_SIZE, ItemStack.EMPTY)
+    private val recipeInput = object : RecipeInput {
+        override fun getItem(index: Int): ItemStack = inventory[index]
+
+        override fun size(): Int = inventory.size
+    }
 
     override fun saveAdditional(compoundTag: CompoundTag, registries: HolderLookup.Provider) {
         if (isDummy) return
@@ -73,12 +78,12 @@ class BoatyardBlockEntity(val pos: BlockPos, val state: BlockState) : BlockEntit
         if (!hasLevel() || level!!.isClientSide)
             return
 
-        val optional = level!!.recipeManager.getRecipeFor(BoatyardRecipe.Companion.Type.TYPE, inventory as RecipeInput, level!!)
+        val optional = level!!.recipeManager.getRecipeFor(BoatyardRecipe.Companion.Type.TYPE, recipeInput, level!!)
 
         if (optional.isPresent) {
             val recipe = optional.get().value
-            if (recipe.matches(inventory, level!!)) {
-                val output = recipe.assemble(inventory, level!!.registryAccess())
+            if (recipe.matches(recipeInput, level!!)) {
+                val output = recipe.assemble(recipeInput, level!!.registryAccess())
                 setItem(INV_SIZE-1, output)
                 return
             }
